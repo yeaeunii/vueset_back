@@ -40,8 +40,12 @@ public class BoardPostController {
 
     //게시글 삭제
     @DeleteMapping("/postdelete/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        boardPostService.deleteBoardPost(id);
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long id,
+            @RequestBody BoardPost password
+    ) {
+        boardPostService.deleteBoardPost(id,password);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -54,6 +58,17 @@ public class BoardPostController {
         return boardPostService.search(type, keyword);
     }
 
+
+    //비밀번호 검사
+    @PostMapping("/post/{id}/check-password")
+    public ResponseEntity<Boolean> checkPassword(
+            @PathVariable Long id,
+            @RequestBody BoardPost password
+    ) {
+        return ResponseEntity.ok(
+                boardPostService.checkPassword(id, password.getBoardPW())
+        );
+    }
 
 
 }
