@@ -1,7 +1,9 @@
 package kr.co.yeaeun.tmsp.service;
 
 import jakarta.transaction.Transactional;
-import kr.co.yeaeun.tmsp.model.BoardPost;
+import kr.co.yeaeun.tmsp.model.Board.BoardPost;
+import kr.co.yeaeun.tmsp.model.Login.User;
+import kr.co.yeaeun.tmsp.service.Repository.BoardPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,22 +18,35 @@ public class BoardPostService {
 
     private final BoardPostRepository boardPostRepository;
     private final PasswordEncoder passwordEncoder;
+
     //게시글 조회
     public List<BoardPost> getBoardPosts() {
         return boardPostRepository.findByUseYnTrueOrderByIdDesc();
     }
 
     //게시글 작성
-    public BoardPost writeBoardPost(BoardPost write) {
+    public BoardPost writeBoardPost(BoardPost write, User loginUser) {
 
         BoardPost post = new BoardPost();
 
-        post.setWriterid(write.getWriterid());
-        post.setWriter(write.getWriter());
         post.setTitle(write.getTitle());
         post.setContent(write.getContent());
-        post.setBoardPW(write.getBoardPW());
-        post.setBoardPW(passwordEncoder.encode(write.getBoardPW()));
+
+        if (loginUser != null) {
+            // 로그인 글
+            post.setWriterid(loginUser.getId());
+            post.setWriter(loginUser.getUsername());
+            post.setBoardPW(
+                    passwordEncoder.encode(write.getBoardPW())
+            );
+        } else {
+            // 익명 글
+            post.setWriterid(1L);                 // 익명  id= 1로 고정
+            post.setWriter(write.getWriter());
+            post.setBoardPW(
+                    passwordEncoder.encode(write.getBoardPW())
+            );
+        }
 
         return boardPostRepository.save(post);
     }
@@ -61,7 +76,8 @@ public class BoardPostService {
         return boardPostRepository.save(post);
     }
 
-    //게시글 삭제
+
+
     @Transactional
     public void deleteBoardPost(Long id,  BoardPost password) {
 
@@ -87,11 +103,11 @@ public class BoardPostService {
     public List<BoardPost> search(String type, String keyword) {
         switch (type) {
             case "title":
-                return boardPostRepository.findByTitleContaining(keyword);
+                return boardPostRepository.findByUseYnTrueAndTitleContaining(keyword);
             case "content":
-                return boardPostRepository.findByContentContaining(keyword);
+                return boardPostRepository.findByUseYnTrueAndContentContaining(keyword);
             case "writer":
-                return boardPostRepository.findByWriterContaining(keyword);
+                return boardPostRepository.findByUseYnTrueAndWriterContaining(keyword);
             default:
                 return List.of();
         }

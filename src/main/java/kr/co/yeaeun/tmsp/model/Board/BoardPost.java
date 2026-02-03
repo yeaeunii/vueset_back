@@ -1,4 +1,4 @@
-package kr.co.yeaeun.tmsp.model;
+package kr.co.yeaeun.tmsp.model.Board;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -45,11 +45,12 @@ public class BoardPost {
 
     @PrePersist
     public void prePersist() {
-        this.useYn = true;
-        this.viewCnt = 0;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.useYn = true;
+        this.viewCnt = 0;
     }
+
 
     @PreUpdate
     public void preUpdate() {
