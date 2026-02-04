@@ -101,15 +101,16 @@ public class AuthService {
     @Transactional
     public String refresh(String refreshToken) {
 
-        // 1️ DB에서 refresh token 조회
+        // DB에서 refresh token 조회
         RefreshToken saved = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED, "유효하지 않은 refresh token"
                 ));
 
-        // 2️JWT 자체 만료 검증 (exp)
+        // JWT 만료 검증 (exp)
         try {
             jwtProvider.validateRefreshToken(refreshToken);
+
         } catch (Exception e) {
             // 만료되었으면 DB에서도 제거 = 로그아웃
             refreshTokenRepository.delete(saved);
@@ -118,7 +119,7 @@ public class AuthService {
             );
         }
 
-        // 3️사용자 조회
+        // 사용자 조회
         User member = memberRepository.findById(saved.getMemberId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED, "사용자 없음"

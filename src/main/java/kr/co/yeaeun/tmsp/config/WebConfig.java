@@ -45,7 +45,11 @@ public class WebConfig implements WebMvcConfigurer {
     //화면 라우팅(vue)
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:uploads/");
+
+
+        registry.addResourceHandler("/**")  //모든 요청을 static/index.html 기준으로 처리
                 .addResourceLocations("classpath:/static/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
@@ -58,5 +62,7 @@ public class WebConfig implements WebMvcConfigurer {
                     }
                 });
     }
+
+
 
 }
