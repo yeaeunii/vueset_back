@@ -4,14 +4,13 @@ package kr.co.yeaeun.tmsp.service;
 import kr.co.yeaeun.tmsp.model.News.DTO.NewsletterList;
 import kr.co.yeaeun.tmsp.model.News.Newsletter;
 import kr.co.yeaeun.tmsp.model.News.NewsletterImage;
-import kr.co.yeaeun.tmsp.service.Repository.NewsImageRepository;
-import kr.co.yeaeun.tmsp.service.Repository.NewsRepository;
+import kr.co.yeaeun.tmsp.service.Repository.News.NewsImageRepository;
+import kr.co.yeaeun.tmsp.service.Repository.News.NewsRepository;
 import kr.co.yeaeun.tmsp.service.Storage.LocalFileStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -75,15 +74,14 @@ public void create(
     }
 }
 
-    // 뉴스레터 상세 조회
-//    public List<NewsletterList> getNewsletterList(
-//            String category,
-//            String keyword
-//    ) {
-//        return newsRepository.findNewsletterList(
-//                category,
-//                keyword
-//        );
+//    public Newsletter getNewsletterDetail(Long id) {
+//        return newsRepository.findDetailById(id)
+//                .orElseThrow(() ->
+//                        new ResponseStatusException(
+//                                HttpStatus.NOT_FOUND,
+//                                "뉴스레터를 찾을 수 없습니다."
+//                        )
+//                );
 //    }
 
 

@@ -1,0 +1,1 @@
+async function n(e,r={}){const t=await fetch(e,{credentials:"include",...r});return t.status!==401||typeof e=="string"&&e.includes("/api/auth/refresh")?t:(await fetch("/api/auth/refresh",{method:"POST",credentials:"include"})).ok?fetch(e,{credentials:"include",...r}):(window.dispatchEvent(new CustomEvent("auth-expired")),t)}export{n as a};

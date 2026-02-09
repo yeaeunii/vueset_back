@@ -32,7 +32,7 @@ public class AuthController {
                 .path("/") //쿠키가 어떤 경로에서 유효한지
                 .sameSite("Lax") //Strict → 같은 사이트 요청만 허용 / Lax → 일반적인 GET/POST 허용 /None → 전부 허용 (CSRF 위험, Secure 필수)
                 .path("/")
-                .maxAge(Duration.ofMinutes(1))
+                .maxAge(Duration.ofMinutes(10))
                 .build();
 
 
@@ -41,7 +41,7 @@ public class AuthController {
                 .secure(false)
                 .sameSite("Lax")
                 .path("/api/auth/refresh") //재발급 api에서만 쿠키 유효
-                .maxAge(Duration.ofDays(2))
+                .maxAge(Duration.ofDays(30))
                 .build();
 
 
@@ -102,12 +102,11 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("access_token", newAccessToken)
                 .httpOnly(true)
                 .path("/")
-                .maxAge(Duration.ofMinutes(1))
+                .maxAge(Duration.ofMinutes(10))
                 .build();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-//                .build();
                  .body(Map.of("result", "ok"));
     }
 

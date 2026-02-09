@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -38,7 +39,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/**")          // 인증 필요한 API
                 .excludePathPatterns(
                         "/api/auth/login",
-                        "/api/auth/register"
+                        "/api/auth/register",
+                        "/api/manual/progress/**"
                 );
     }
     //build
@@ -47,6 +49,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
+
+
+        registry.addResourceHandler("/screenshots/**")
+                .addResourceLocations("file:screenshots/");
 
 
         registry.addResourceHandler("/**")  //모든 요청을 static/index.html 기준으로 처리
@@ -62,7 +68,6 @@ public class WebConfig implements WebMvcConfigurer {
                     }
                 });
     }
-
 
 
 }
